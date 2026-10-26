@@ -1,0 +1,6 @@
+{
+  "name": "PolyglotClock",
+  "description": "Hourly ambient multilingual vocabulary desktop clock displaying words, articles, and dictionary forms in Ukrainian, English, German, French, Polish, and Latin.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
