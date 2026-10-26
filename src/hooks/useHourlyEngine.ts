@@ -198,13 +198,37 @@ export function useHourlyEngine() {
     [recordHistory]
   );
 
+  // Visited stack for previous button navigation
+  const visitedStackRef = useRef<number[]>([]);
+
+  const getRandomIndex = useCallback(() => {
+    if (totalWords <= 1) return 0;
+    let nextIdx = Math.floor(Math.random() * totalWords);
+    // Ensure we don't repeat the exact same word immediately
+    if (nextIdx === currentIndexRef.current && totalWords > 1) {
+      nextIdx = (nextIdx + 1) % totalWords;
+    }
+    return nextIdx;
+  }, [totalWords]);
+
   const nextWord = useCallback(() => {
-    loadWordByIndex(currentIndexRef.current + 1);
-  }, [loadWordByIndex]);
+    visitedStackRef.current.push(currentIndexRef.current);
+    // Keep stack bounded
+    if (visitedStackRef.current.length > 50) {
+      visitedStackRef.current.shift();
+    }
+    const randIdx = getRandomIndex();
+    loadWordByIndex(randIdx);
+  }, [getRandomIndex, loadWordByIndex]);
 
   const prevWord = useCallback(() => {
-    loadWordByIndex(currentIndexRef.current - 1);
-  }, [loadWordByIndex]);
+    if (visitedStackRef.current.length > 0) {
+      const prevIdx = visitedStackRef.current.pop()!;
+      loadWordByIndex(prevIdx);
+    } else {
+      loadWordByIndex((currentIndexRef.current - 1 + totalWords) % totalWords);
+    }
+  }, [totalWords, loadWordByIndex]);
 
   const togglePause = useCallback(() => {
     setIsPaused((prev) => {
@@ -238,7 +262,7 @@ export function useHourlyEngine() {
     });
   }, []);
 
-  // Non-freezing drift checker
+    // Non-freezing drift checker with random next word selection
   const checkClock = useCallback(() => {
     if (isPausedRef.current) return;
 
@@ -247,14 +271,13 @@ export function useHourlyEngine() {
     const diff = currentTarget - now;
 
     if (diff <= 0) {
-      const currentInterval = intervalMsRef.current;
-      const missedCycles = Math.max(1, Math.floor(Math.abs(diff) / currentInterval) + 1);
-      const nextIdx = (currentIndexRef.current + missedCycles) % totalWords;
-      loadWordByIndex(nextIdx);
+      visitedStackRef.current.push(currentIndexRef.current);
+      const randIdx = getRandomIndex();
+      loadWordByIndex(randIdx);
     } else {
       setRemainingMs(diff);
     }
-  }, [totalWords, loadWordByIndex]);
+  }, [getRandomIndex, loadWordByIndex]);
 
   useEffect(() => {
     const timer = setInterval(checkClock, 1000);
