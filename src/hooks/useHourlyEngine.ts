@@ -10,13 +10,23 @@ export interface IntervalOption {
 }
 
 export const INTERVAL_OPTIONS: IntervalOption[] = [
+  { label: '30 sec (Rapid)', ms: 30 * 1000 },
+  { label: '1 min', ms: 1 * 60 * 1000 },
+  { label: '2 min', ms: 2 * 60 * 1000 },
+  { label: '5 min', ms: 5 * 60 * 1000 },
+  { label: '10 min', ms: 10 * 60 * 1000 },
   { label: '15 min', ms: 15 * 60 * 1000 },
+  { label: '20 min', ms: 20 * 60 * 1000 },
   { label: '30 min', ms: 30 * 60 * 1000 },
-  { label: '1 hour', ms: 60 * 60 * 1000 },
+  { label: '45 min', ms: 45 * 60 * 1000 },
+  { label: '1 hour (Hourly)', ms: 60 * 60 * 1000 },
   { label: '2 hours', ms: 2 * 60 * 60 * 1000 },
+  { label: '3 hours', ms: 3 * 60 * 60 * 1000 },
+  { label: '4 hours', ms: 4 * 60 * 60 * 1000 },
   { label: '6 hours', ms: 6 * 60 * 60 * 1000 },
+  { label: '8 hours', ms: 8 * 60 * 60 * 1000 },
   { label: '12 hours', ms: 12 * 60 * 60 * 1000 },
-  { label: '24 hours', ms: 24 * 60 * 60 * 1000 },
+  { label: '24 hours (Daily)', ms: 24 * 60 * 60 * 1000 },
 ];
 
 const STORAGE_KEYS = {
@@ -281,7 +291,7 @@ export function useHourlyEngine() {
     const seconds = totalSeconds % 60;
 
     if (hours > 0) {
-      return `${hours}h ${String(minutes).padStart(2, '0')}m`;
+      return `${hours}h ${String(minutes).padStart(2, '0')}m ${String(seconds).padStart(2, '0')}s`;
     }
     return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
   };

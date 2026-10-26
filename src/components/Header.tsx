@@ -108,7 +108,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Apple Interval Picker */}
-          <div className="relative hidden xs:block">
+          <div className="relative flex items-center">
             <label htmlFor="apple-interval-select" className="sr-only">
               Refresh Interval
             </label>
@@ -116,11 +116,13 @@ export const Header: React.FC<HeaderProps> = ({
               id="apple-interval-select"
               value={intervalMs}
               onChange={(e) => onSelectInterval(Number(e.target.value))}
-              className="appearance-none bg-[#F2F2F7] hover:bg-[#E5E5EA] border border-black/[0.04] text-[#1D1D1F] text-xs font-medium px-3 py-1.5 pr-6 rounded-lg cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3]/30"
-            >
+              aria-label="Change refresh interval"
+              title="Change automatic refresh interval"
+              className="appearance-none bg-[#F2F2F7] hover:bg-[#E5E5EA] border border-black/[0.06] text-[#1D1D1F] text-xs font-semibold px-2.5 py-1.5 pr-6 rounded-lg cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-[#0071E3]/30"
+              >
               {INTERVAL_OPTIONS.map((opt) => (
                 <option key={opt.ms} value={opt.ms}>
-                  {opt.label}
+                ⏱ {opt.label}
                 </option>
               ))}
             </select>
